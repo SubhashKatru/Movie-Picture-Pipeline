@@ -4,7 +4,7 @@ ENV FLASK_RUN_HOST=0.0.0.0
 WORKDIR /
 RUN adduser -u 1000 -D app
 RUN apk update && \
-  apk add \
+  apk add --no-cache \
   pcre \
   pcre-dev \
   build-base \
@@ -12,12 +12,13 @@ RUN apk update && \
   linux-headers \
   openssl \
   libffi-dev \
-  && pip install pipenv
+  mailcap \
+  && pip install --no-cache-dir pipenv
 
 RUN mkdir -p /var/www/app && mkdir /app
 
 COPY Pipfile* /app
-RUN cd /app && pipenv install --system
+RUN cd /app && pipenv install --system --skip-lock
 
 COPY . /app
 
