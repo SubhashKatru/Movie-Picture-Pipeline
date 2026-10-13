@@ -141,6 +141,9 @@ resource "aws_ecr_repository" "backend" {
 ################
 # Create an EKS cluster
 resource "aws_eks_cluster" "main" {
+  lifecycle {
+    ignore_changes = [version]
+  }
   name     = "cluster"
   version  = var.k8s_version
   role_arn = aws_iam_role.eks_cluster.arn
@@ -192,7 +195,7 @@ data "aws_ssm_parameter" "eks_ami_release_version" {
 }
 
 resource "aws_eks_node_group" "main" {
-  ami_type = "BOTTLEROCKET_x86_64"
+  ami_type = "AL2_x86_64"
   node_group_name = "udacity"
   cluster_name    = aws_eks_cluster.main.name
   version         = aws_eks_cluster.main.version
